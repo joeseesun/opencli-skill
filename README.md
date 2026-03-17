@@ -52,7 +52,7 @@ Before installation, check that you have all of these:
 
 - [ ] **Node.js** v16+ — [Download from nodejs.org](https://nodejs.org/)
 - [ ] **Chrome browser** open and logged in to your target platforms
-- [ ] **Playwright MCP Bridge** Chrome extension — [Install from Chrome Web Store](https://chromewebstore.google.com/detail/playwright-mcp-bridge/kldoghpdblpjbjeechcaoibpfbgfomkn)
+- [ ] **Playwright MCP Bridge** Chrome extension — [Install from Chrome Web Store](https://chromewebstore.google.com/detail/playwright-mcp-bridge/mmlmfjhmonkocbjadbfplnigmagldckm)
 - [ ] **Playwright MCP** configured in Claude Code (see Step 3 below)
 - [ ] **Claude Code** — [Install](https://claude.ai/code)
 
@@ -71,7 +71,7 @@ opencli --version
 
 **Step 2 — Install Playwright MCP Bridge in Chrome**
 
-1. Open Chrome and go to the [Playwright MCP Bridge](https://chromewebstore.google.com/detail/playwright-mcp-bridge/kldoghpdblpjbjeechcaoibpfbgfomkn) page on the Chrome Web Store
+1. Open Chrome and go to the [Playwright MCP Bridge](https://chromewebstore.google.com/detail/playwright-mcp-bridge/mmlmfjhmonkocbjadbfplnigmagldckm) page on the Chrome Web Store
 2. Click **"Add to Chrome"** and confirm
 3. Check that the extension icon appears in Chrome's toolbar (top-right)
 
@@ -212,7 +212,7 @@ Huge thanks to **[@jakevin7 (卡比卡比)](https://github.com/jackwener)** for 
 
 - [ ] **Node.js** v16 及以上 — [从 nodejs.org 下载](https://nodejs.org/)
 - [ ] **Chrome 浏览器** 已打开，并已登录目标网站
-- [ ] **Playwright MCP Bridge** Chrome 扩展 — [Chrome 商店安装](https://chromewebstore.google.com/detail/playwright-mcp-bridge/kldoghpdblpjbjeechcaoibpfbgfomkn)
+- [ ] **Playwright MCP Bridge** Chrome 扩展 — [Chrome 商店安装](https://chromewebstore.google.com/detail/playwright-mcp-bridge/mmlmfjhmonkocbjadbfplnigmagldckm)
 - [ ] **Playwright MCP** 已在 Claude Code 中配置（见第三步）
 - [ ] **Claude Code** — [安装地址](https://claude.ai/code)
 
@@ -235,7 +235,7 @@ opencli --version
 
 **第二步：在 Chrome 安装 Playwright MCP Bridge 扩展**
 
-1. 打开 Chrome，访问 [Playwright MCP Bridge 扩展页面](https://chromewebstore.google.com/detail/playwright-mcp-bridge/kldoghpdblpjbjeechcaoibpfbgfomkn)
+1. 打开 Chrome，访问 [Playwright MCP Bridge 扩展页面](https://chromewebstore.google.com/detail/playwright-mcp-bridge/mmlmfjhmonkocbjadbfplnigmagldckm)
 2. 点击「添加到 Chrome」，在弹窗中确认
 3. 检查 Chrome 右上角工具栏，确认扩展图标已出现
 
