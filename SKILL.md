@@ -129,6 +129,83 @@ opencli 有对应命令？
 - Chrome browser open with target site logged in
 - Playwright MCP Bridge extension installed in Chrome（未安装时见上方引导）
 
+## Environment Preflight
+
+Before retrying browser-backed opencli commands or asking the user to re-authorize repeatedly, do a one-time environment check for:
+
+```bash
+PLAYWRIGHT_MCP_EXTENSION_TOKEN
+```
+
+### Required behavior for the agent
+
+1. Check whether `PLAYWRIGHT_MCP_EXTENSION_TOKEN` exists in the current execution environment.
+2. If the variable is present, continue with normal opencli execution.
+3. If the variable is missing, stop the retry loop and explain that the browser bridge token is not available to the current process.
+4. Ask the user to provide the token or confirm that the agent should help persist it in the correct place for the current runtime.
+5. After the token is written, re-check the environment and run one small `opencli ... -f json` command to verify the fix.
+
+### Runtime-specific remediation
+
+- **OpenClaw / Gateway service**: prefer `~/.openclaw/.env`, then run `openclaw gateway restart`
+- **Claude Code / direct terminal**: prefer the env location already used by the user's shell or tool bootstrap. If no existing convention is visible, suggest persisting it in the login shell startup file such as `~/.zshrc` or `~/.bashrc`, then restarting the session
+
+### Safety rules
+
+- Never invent a token value
+- Never print the full token back to the user after they provide it
+- Do not keep retrying commands that trigger repeated browser authorization if the env check already failed
+
+## OpenClaw 环境提醒
+
+如果任务运行在 **OpenClaw** 里，而不是普通 terminal / Claude Code 直连环境，优先检查浏览器扩展 token 是否真的进入了 Gateway 的执行环境。
+
+关键变量：
+
+```bash
+PLAYWRIGHT_MCP_EXTENSION_TOKEN
+```
+
+原因：OpenClaw 的 Gateway 常常作为后台服务运行（例如 launchd/systemd），**不会自动继承你当前 shell 的环境变量**。这会导致一种很迷惑的现象：
+
+- 在 terminal 里直接运行 `opencli ...` 可以成功
+- 但在 OpenClaw 里调用同样命令时，登录态失效或浏览器链路不可用
+
+### OpenClaw 下的优先排查动作
+
+1. 先检查当前执行环境里有没有这个变量
+2. 如果没有，不要继续重复拉起浏览器授权，而是先提醒当前进程缺少 token
+3. 如果用户希望 agent 直接协助修复，优先把它写进 `~/.openclaw/.env`
+4. 然后提醒重启 Gateway：`openclaw gateway restart`
+5. 再重新测试 opencli 命令
+
+推荐提示模板：
+
+> 如果你是在 OpenClaw 里用 opencli，而不是在 terminal 里直接运行，请先确认 `PLAYWRIGHT_MCP_EXTENSION_TOKEN` 已写入 `~/.openclaw/.env`。因为 Gateway 作为服务运行时，通常不会自动继承你 shell 里的环境变量。写入后执行 `openclaw gateway restart`，再重新测试。
+
+### 推荐修法
+
+```bash
+echo 'PLAYWRIGHT_MCP_EXTENSION_TOKEN=你的token' >> ~/.openclaw/.env
+openclaw gateway restart
+```
+
+### 可选方案
+
+OpenClaw 官方还支持：
+
+- 在 `~/.openclaw/openclaw.json` 中配置 `env` block
+- 开启 `env.shellEnv.enabled: true`
+
+但如果当前现象是“terminal 能跑、OpenClaw 里不行”，默认优先建议 `~/.openclaw/.env`，因为这条路最稳，也最容易验证。
+
+### 建议验证命令
+
+```bash
+python -c "import os; print('PRESENT' if os.getenv('PLAYWRIGHT_MCP_EXTENSION_TOKEN') else 'MISSING')"
+opencli xiaohongshu search --keyword "opencli" --limit 5 -f json
+```
+
 ## 自迭代能力：为新网站创建 CLI
 
 **当 opencli 不支持某个网站时，不要放弃——自己创建！**

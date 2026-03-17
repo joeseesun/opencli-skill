@@ -159,8 +159,32 @@ Known risks:
 | `opencli: command not found` | Re-run `npm install -g @jackwener/opencli`; check your PATH |
 | Chrome not being controlled | Make sure Chrome is open; verify Playwright MCP Bridge extension is enabled |
 | Login state not recognized | In Chrome, manually log in to the target site first |
+| Repeated browser authorization prompts / works in terminal but not in agent runtime | Check `PLAYWRIGHT_MCP_EXTENSION_TOKEN`. In OpenClaw, write it to `~/.openclaw/.env` and restart Gateway. In Claude Code or a direct terminal workflow, persist it in the shell env used to launch the agent, then restart the session |
 | "Playwright MCP not found" error | Re-run Step 3: `claude mcp add playwright ...` |
 | `npx skills add` fails | Make sure Node.js v16+ is installed |
+
+#### Environment Token Check
+
+If the browser bridge keeps asking you to authorize again, or `opencli` works in a normal terminal but fails inside an agent runtime, verify that the current process can see:
+
+```bash
+PLAYWRIGHT_MCP_EXTENSION_TOKEN
+```
+
+Quick verification:
+
+```bash
+python -c "import os; print('PRESENT' if os.getenv('PLAYWRIGHT_MCP_EXTENSION_TOKEN') else 'MISSING')"
+```
+
+OpenClaw users should usually persist the token here:
+
+```bash
+echo 'PLAYWRIGHT_MCP_EXTENSION_TOKEN=your-token' >> ~/.openclaw/.env
+openclaw gateway restart
+```
+
+Claude Code or direct terminal users should persist the token in the shell environment that launches the agent, then start a new session before retrying `opencli`.
 
 ### Credits
 
@@ -330,8 +354,32 @@ opencli reddit hot --subreddit MachineLearning
 | `opencli: command not found` | 重新运行 `npm install -g @jackwener/opencli`，检查 PATH 配置 |
 | Chrome 无法被控制 | 确保 Chrome 已打开，且 Playwright MCP Bridge 扩展已启用 |
 | 登录态未识别 | 在 Chrome 中手动登录目标网站后再试 |
+| 浏览器反复要求授权，或 terminal 能跑但 agent 里不行 | 检查 `PLAYWRIGHT_MCP_EXTENSION_TOKEN`。如果是 OpenClaw，优先写入 `~/.openclaw/.env` 并重启 Gateway；如果是 Claude Code 或普通终端工作流，把它持久化到启动 agent 的 shell 环境后重开会话 |
 | 提示找不到 Playwright MCP | 重新执行第三步的配置命令 |
 | `npx skills add` 报错 | 确认 Node.js v16+ 已安装 |
+
+#### 环境变量检查
+
+如果浏览器桥接链路反复要求你重新授权，或者 `opencli` 在普通 terminal 里可用、但在 agent 运行时里失效，先确认当前进程是否能看到：
+
+```bash
+PLAYWRIGHT_MCP_EXTENSION_TOKEN
+```
+
+快速验证：
+
+```bash
+python -c "import os; print('PRESENT' if os.getenv('PLAYWRIGHT_MCP_EXTENSION_TOKEN') else 'MISSING')"
+```
+
+如果你在 OpenClaw 中使用，通常建议把 token 写到这里：
+
+```bash
+echo 'PLAYWRIGHT_MCP_EXTENSION_TOKEN=your-token' >> ~/.openclaw/.env
+openclaw gateway restart
+```
+
+如果你在 Claude Code 或普通终端里使用，请把 token 持久化到启动 agent 的 shell 环境中，然后开启一个新的会话后再重试 `opencli`。
 
 ### 致谢
 
