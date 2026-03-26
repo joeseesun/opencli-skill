@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "opencli-skill",
+  "owner": {
+    "name": "joeseesun",
+    "url": "https://github.com/joeseesun"
+  },
+  "plugins": [
+    {
+      "name": "opencli",
+      "source": "./",
+      "description": "CLI tool that turns websites into CLI interfaces, reusing Chrome's login state. Supports Bilibili, Zhihu, Twitter/X, YouTube, Weibo, 小红书, V2EX, Reddit, HackerNews, 雪球, BOSS直聘 etc.",
+      "version": "1.0.0"
+    }
+  ]
+}
