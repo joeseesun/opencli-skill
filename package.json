@@ -1,0 +1,40 @@
+{
+  "name": "qiaomu-opencli-skills",
+  "version": "1.6.9",
+  "description": "Claude Code Skills for OpenCLI - 79+ website adapters and browser automation",
+  "author": "joeseesun",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joeseesun/qiaomu-opencli-skills.git"
+  },
+  "keywords": [
+    "claude-code",
+    "skills",
+    "opencli",
+    "browser-automation",
+    "web-scraping",
+    "cli",
+    "bilibili",
+    "twitter",
+    "reddit",
+    "xiaohongshu",
+    "ai-agent"
+  ],
+  "skills": [
+    "qiaomu-opencli-usage",
+    "qiaomu-opencli-browser",
+    "qiaomu-opencli-explorer",
+    "qiaomu-opencli-oneshot",
+    "qiaomu-opencli-autofix",
+    "qiaomu-smart-search"
+  ],
+  "upstream": {
+    "name": "@jackwener/opencli",
+    "version": "1.6.9",
+    "repository": "https://github.com/jackwener/opencli"
+  },
+  "peerDependencies": {
+    "@jackwener/opencli": "^1.6.9"
+  }
+}

@@ -1,361 +1,210 @@
-# opencli-skill × Claude Code
+# Qiaomu OpenCLI Skills
 
-> Control Bilibili, Zhihu, Twitter/X, YouTube, Weibo, Reddit and 10 more platforms with natural language — reusing your Chrome login session, no API keys needed.
->
-> 用自然语言操控 B站、知乎、Twitter/X、YouTube、微博、Reddit 等 16 个平台——直接复用你的 Chrome 登录态，无需任何 API Key。
+> 基于 [jackwener/opencli](https://github.com/jackwener/opencli) 的 Claude Code Skills 集合
 
-**[English](#english) | [中文](#中文)**
+[![Upstream](https://img.shields.io/badge/upstream-jackwener%2Fopencli-blue)](https://github.com/jackwener/opencli)
+[![Version](https://img.shields.io/badge/version-1.6.9-green)](https://github.com/jackwener/opencli/releases)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
----
+将 79+ 网站和桌面应用转化为 CLI 接口，让 AI Agent 能够直接操作浏览器、搜索内容、发布推文、下载视频等。
 
-<a name="english"></a>
-## English
+## 🎯 核心能力
 
-### What is this?
+- **79+ 网站适配器**：Bilibili、Twitter、Reddit、小红书、知乎、YouTube、HackerNews 等
+- **桌面应用控制**：Cursor、Codex、ChatGPT、Notion、微信等 Electron 应用
+- **浏览器自动化**：通过 CDP 直接控制 Chrome，复用登录状态
+- **智能搜索路由**：自动选择最佳数据源（AI 源 + 专用源）
+- **适配器生成**：从任意 URL 自动生成 CLI 适配器
+- **自动修复**：损坏的适配器自动诊断和修复
 
-Have you ever wanted Claude to:
-- Browse **Bilibili** trending, search **Zhihu**, check **Weibo** hot topics
-- Search **YouTube**, get **Reddit** posts, read **HackerNews**
-- Check **stock prices** on Yahoo Finance or Xueqiu
-- Post a **tweet** or search your **Twitter** timeline
+## 📦 Skills 列表
 
-...but Claude has no access to these platforms?
+| Skill | 描述 | 使用场景 |
+|-------|------|----------|
+| **qiaomu-opencli-usage** | 79+ 适配器的完整命令参考 | 查询热门、搜索、发布、下载等日常操作 |
+| **qiaomu-opencli-browser** | 浏览器自动化控制 | 需要直接操作浏览器时（点击、输入、截图） |
+| **qiaomu-opencli-explorer** | 适配器创建完整指南 | 为新网站创建 CLI 适配器 |
+| **qiaomu-opencli-oneshot** | 快速生成单个命令 | 从 URL 快速生成一次性适配器 |
+| **qiaomu-opencli-autofix** | 适配器自动修复 | 适配器失效时自动诊断修复 |
+| **qiaomu-smart-search** | 智能搜索路由器 | 自动选择最佳搜索源 |
 
-**This skill bridges that gap.**
+## 🚀 快速开始
 
-It wraps [opencli](https://github.com/jackwener/opencli) — a brilliant open-source CLI tool that turns 16 major platforms into command-line interfaces by **reusing your existing Chrome login sessions**. No API keys. No re-authentication. Just open Chrome, log in as usual, and Claude can do the rest.
-
-### Supported Platforms (16)
-
-| Platform | Read | Search | Write |
-|----------|------|--------|-------|
-| Bilibili (B站) | ✅ Hot/Ranking/Feed/History | ✅ Videos/Users | — |
-| Zhihu (知乎) | ✅ Hot list | ✅ | ✅ Question details |
-| Weibo (微博) | ✅ Trending | — | ✅ Post (via Playwright) |
-| Twitter/X | ✅ Timeline/Trending/Bookmarks | ✅ | ✅ Post/Reply/Like |
-| YouTube | — | ✅ | — |
-| Xiaohongshu (小红书) | ✅ Recommended feed | ✅ | — |
-| Reddit | ✅ Home/Hot | ✅ | — |
-| HackerNews | ✅ Top stories | — | — |
-| V2EX | ✅ Hot/Latest | — | ✅ Daily check-in |
-| Xueqiu (雪球) | ✅ Hot/Stocks/Watchlist | ✅ | — |
-| BOSS直聘 | — | ✅ Jobs | — |
-| BBC | ✅ News | — | — |
-| Reuters | — | ✅ | — |
-| 什么值得买 | — | ✅ Deals | — |
-| Yahoo Finance | ✅ Stock quotes | — | — |
-| Ctrip (携程) | — | ✅ Attractions/Cities | — |
-
-### Prerequisites
-
-Before installation, check that you have all of these:
-
-- [ ] **Node.js** v16+ — [Download from nodejs.org](https://nodejs.org/)
-- [ ] **Chrome browser** open and logged in to your target platforms
-- [ ] **Playwright MCP Bridge** Chrome extension — [Install from Chrome Web Store](https://chromewebstore.google.com/detail/playwright-mcp-bridge/kldoghpdblpjbjeechcaoibpfbgfomkn)
-- [ ] **Playwright MCP** configured in Claude Code (see Step 3 below)
-- [ ] **Claude Code** — [Install](https://claude.ai/code)
-
-### Installation (4 Steps)
-
-**Step 1 — Install the opencli CLI tool**
+### 1. 安装 OpenCLI
 
 ```bash
 npm install -g @jackwener/opencli
 ```
 
-Verify it works:
-```bash
-opencli --version
-```
+### 2. 安装浏览器扩展
 
-**Step 2 — Install Playwright MCP Bridge in Chrome**
+1. 从 [Releases](https://github.com/jackwener/opencli/releases) 下载 `opencli-extension.zip`
+2. 解压后在 `chrome://extensions` 加载解压后的文件夹
+3. 确保 Chrome 已登录目标网站
 
-1. Open Chrome and go to the [Playwright MCP Bridge](https://chromewebstore.google.com/detail/playwright-mcp-bridge/kldoghpdblpjbjeechcaoibpfbgfomkn) page on the Chrome Web Store
-2. Click **"Add to Chrome"** and confirm
-3. Check that the extension icon appears in Chrome's toolbar (top-right)
-
-> **Why is this needed?** opencli controls your Chrome browser to reuse your existing login sessions. This extension acts as the bridge between opencli and Chrome, so you never have to enter your credentials again.
-
-**Step 3 — Configure Playwright MCP in Claude Code**
-
-Claude Code needs the Playwright MCP server to control Chrome. Run this once in your terminal:
+### 3. 安装 Skills
 
 ```bash
-claude mcp add playwright --scope user -- npx @playwright/mcp@latest
+# 安装所有 skills
+npx skills add joeseesun/qiaomu-opencli-skills
+
+# 或单独安装
+npx skills add joeseesun/qiaomu-opencli-skills --skill qiaomu-opencli-usage
+npx skills add joeseesun/qiaomu-opencli-skills --skill qiaomu-smart-search
 ```
 
-Verify it was added:
-```bash
-claude mcp list
-```
-
-You should see `playwright` in the list.
-
-**Step 4 — Install this skill**
+### 4. 验证安装
 
 ```bash
-npx skills add joeseesun/opencli-skill
+opencli doctor
+opencli list
+opencli hackernews top --limit 5
 ```
 
-That's it! Restart Claude Code to activate the skill.
+## 💡 使用示例
 
-### Usage
-
-Make sure Chrome is open and you're logged in to the target platforms, then talk to Claude naturally:
-
-```
-"Search YouTube for LLM tutorials"
-"Get the top 20 stories on HackerNews"
-"What's trending on Twitter right now?"
-"Search Reddit r/MachineLearning for transformer papers"
-"Get BBC news headlines"
-"Check AAPL stock price"
-"Post a tweet: Just discovered Claude Code skills!"
-```
-
-Claude automatically picks the right opencli command, runs it, and displays results in a clean table with translated titles.
-
-### Command Reference
+### 热门内容
 
 ```bash
-# Bilibili
+# B站热门
 opencli bilibili hot --limit 10 -f json
-opencli bilibili search --keyword "AI"
 
-# Twitter/X
-opencli twitter timeline -f json
-opencli twitter post --text "Hello from Claude!"
-opencli twitter search --query "claude AI"
+# Twitter 趋势
+opencli twitter trending -f json
 
-# YouTube
-opencli youtube search --query "LLM tutorial"
-
-# HackerNews
+# HackerNews 头条
 opencli hackernews top --limit 20 -f json
 
-# Reddit
-opencli reddit hot --subreddit MachineLearning
-
-# Yahoo Finance
-opencli yahoo-finance quote --symbol AAPL
+# 小红书 feed
+opencli xiaohongshu feed -f json
 ```
 
-Full reference for all 55 commands: [references/commands.md](references/commands.md)
-
-### ⚠️ Write Operations Warning
-
-For write operations (posting tweets, Weibo updates, etc.), Claude will **show you the content and ask for confirmation** before posting anything.
-
-Known risks:
-- Platform bot-detection may trigger CAPTCHAs or temporary rate limits
-- Once published, content is immediately public and cannot be recalled by the AI
-- Avoid rapid repeated posting
-
-### Troubleshooting
-
-| Problem | Fix |
-|---------|-----|
-| `opencli: command not found` | Re-run `npm install -g @jackwener/opencli`; check your PATH |
-| Chrome not being controlled | Make sure Chrome is open; verify Playwright MCP Bridge extension is enabled |
-| Login state not recognized | In Chrome, manually log in to the target site first |
-| "Playwright MCP not found" error | Re-run Step 3: `claude mcp add playwright ...` |
-| `npx skills add` fails | Make sure Node.js v16+ is installed |
-
-### Credits
-
-Built on **[jackwener/opencli](https://github.com/jackwener/opencli)**.
-
-Huge thanks to **[@jakevin7 (卡比卡比)](https://github.com/jackwener)** for building this genuinely clever tool — turning major websites into CLI interfaces that reuse existing browser sessions is a brilliant idea that makes AI agents far more capable.
-
----
-
-<a name="中文"></a>
-## 中文
-
-### 这是什么？
-
-你有没有遇到过这种情况：
-
-- 想让 Claude 帮你**查 B站热门**、**搜知乎**、**看微博热搜**，但 Claude 根本没有这些平台的访问权限
-- 用 Playwright 自动化太麻烦，还要单独处理登录态
-- 各平台 API 要申请资质，普通用户根本用不了
-
-**这个 Skill 解决了这个问题。**
-
-它把 [opencli](https://github.com/jackwener/opencli) 封装成 Claude Code 的能力——opencli 是一个开源 CLI 工具，把 16 个主流平台变成命令行接口，**直接复用你 Chrome 浏览器里已有的登录态**。零配置，零 API Key。你在哪个网站登录了，Claude 就能帮你操作哪个网站。
-
-### 支持的平台（16 个）
-
-| 平台 | 读取 | 搜索 | 写操作 |
-|------|------|------|--------|
-| 哔哩哔哩 (B站) | ✅ 热门/排行/动态/历史 | ✅ 视频/用户 | — |
-| 知乎 | ✅ 热榜 | ✅ | ✅ 问题详情 |
-| 微博 | ✅ 热搜 | — | ✅ 发微博（Playwright） |
-| Twitter/X | ✅ 时间线/热门/书签 | ✅ | ✅ 发推/回复/点赞 |
-| YouTube | — | ✅ | — |
-| 小红书 | ✅ 推荐 Feed | ✅ | — |
-| Reddit | ✅ 首页/热门 | ✅ | — |
-| HackerNews | ✅ Top | — | — |
-| V2EX | ✅ 热门/最新 | — | ✅ 签到 |
-| 雪球 | ✅ 热门/行情/自选股 | ✅ | — |
-| BOSS直聘 | — | ✅ 职位 | — |
-| BBC | ✅ 新闻 | — | — |
-| 路透社 | — | ✅ | — |
-| 什么值得买 | — | ✅ | — |
-| Yahoo Finance | ✅ 股票行情 | — | — |
-| 携程 | — | ✅ 景点/城市 | — |
-
-### 前置条件
-
-安装前，请逐一确认以下条件都已满足：
-
-- [ ] **Node.js** v16 及以上 — [从 nodejs.org 下载](https://nodejs.org/)
-- [ ] **Chrome 浏览器** 已打开，并已登录目标网站
-- [ ] **Playwright MCP Bridge** Chrome 扩展 — [Chrome 商店安装](https://chromewebstore.google.com/detail/playwright-mcp-bridge/kldoghpdblpjbjeechcaoibpfbgfomkn)
-- [ ] **Playwright MCP** 已在 Claude Code 中配置（见第三步）
-- [ ] **Claude Code** — [安装地址](https://claude.ai/code)
-
-### 安装配置（四步）
-
-**第一步：安装 opencli CLI 工具**
-
-opencli 是由 [@jakevin7（卡比卡比）](https://github.com/jackwener/opencli) 开发的开源工具：
+### 搜索
 
 ```bash
-npm install -g @jackwener/opencli
+# 搜索 B站
+opencli bilibili search --keyword "AI" -f json
+
+# 搜索知乎
+opencli zhihu search --keyword "大模型" -f json
+
+# 搜索 YouTube
+opencli youtube search --query "LLM tutorial" -f json
 ```
 
-验证安装成功：
-```bash
-opencli --version
-```
-
-如果看到版本号，说明安装正常。
-
-**第二步：在 Chrome 安装 Playwright MCP Bridge 扩展**
-
-1. 打开 Chrome，访问 [Playwright MCP Bridge 扩展页面](https://chromewebstore.google.com/detail/playwright-mcp-bridge/kldoghpdblpjbjeechcaoibpfbgfomkn)
-2. 点击「添加到 Chrome」，在弹窗中确认
-3. 检查 Chrome 右上角工具栏，确认扩展图标已出现
-
-> **为什么需要这个扩展？** opencli 需要控制你的 Chrome 浏览器来复用你的登录态。这个扩展充当了 opencli 和 Chrome 之间的桥梁，让 Claude 可以直接用你已经登录好的账号，不需要你重新输入密码。
-
-**第三步：在 Claude Code 中配置 Playwright MCP**
-
-Claude Code 需要 Playwright MCP 服务才能控制 Chrome。在终端运行一次即可：
+### 发布内容
 
 ```bash
-claude mcp add playwright --scope user -- npx @playwright/mcp@latest
+# 发推
+opencli twitter post --text "Hello from CLI!"
+
+# 回复推文
+opencli twitter reply --url "https://x.com/.../status/123" --text "Great!"
 ```
 
-验证是否配置成功：
-```bash
-claude mcp list
-```
-
-看到列表中有 `playwright` 就说明配置好了。
-
-**第四步：安装本 Skill**
+### 下载
 
 ```bash
-npx skills add joeseesun/opencli-skill
+# 下载小红书图片
+opencli xiaohongshu download --note-id abc123 --output ./xhs
+
+# 下载 B站视频
+opencli bilibili download --bvid BV1xxx --output ./bilibili
 ```
 
-安装完成后重启 Claude Code，Skill 即可生效。
-
-### 使用方法
-
-确保 Chrome 已打开且已登录目标网站，然后在 Claude Code 中用自然语言说：
-
-```
-查下B站今天的热门
-搜知乎上关于AI大模型的讨论
-看微博热搜前10条
-帮我发一条微博：今天天气真好
-查一下茅台的股票行情
-搜YouTube上的LLM教程
-```
-
-Claude 会自动调用 opencli 或 Playwright 完成操作，结果以表格形式展示，英文标题附带中文翻译。
-
-### 命令速查
+### 桌面应用控制
 
 ```bash
-# B站
-opencli bilibili hot --limit 10 -f json
-opencli bilibili search --keyword "AI"
-opencli bilibili history
+# Cursor
+opencli cursor send "refactor this function"
 
-# 知乎
-opencli zhihu hot -f json
-opencli zhihu search --keyword "大模型"
+# ChatGPT
+opencli chatgpt ask "explain quantum computing"
 
-# 微博
-opencli weibo hot -f json
-
-# Twitter/X
-opencli twitter timeline -f json
-opencli twitter post --text "Hello from Claude!"
-opencli twitter search --query "claude AI"
-
-# YouTube
-opencli youtube search --query "LLM tutorial"
-
-# 雪球
-opencli xueqiu stock --symbol SH600519   # 茅台行情
-opencli xueqiu watchlist                  # 我的自选股
-
-# HackerNews
-opencli hackernews top --limit 20 -f json
-
-# Reddit
-opencli reddit hot --subreddit MachineLearning
+# Notion
+opencli notion search --keyword "meeting notes"
 ```
 
-完整 55 条命令详见 [references/commands.md](references/commands.md)。
+### 智能搜索
 
-### ⚠️ 写操作风险说明
+```bash
+# 自动路由到最佳数据源
+opencli smart-search "最新 AI 论文"
+opencli smart-search "React 最佳实践"
+```
 
-对于 Twitter 发推、微博发帖等**写操作**，Claude 会在执行前明确展示将要发布的内容，并等待你确认后才执行。自动化发帖存在以下风险，请知悉：
+## 🏗️ 架构
 
-- 平台风控可能检测到自动化行为，触发验证码或限流
-- 发布后内容立即公开，AI 无法帮你撤回
-- 避免短时间内频繁操作
+```
+qiaomu-opencli-skills/
+├── qiaomu-opencli-usage/       # 主要使用技能
+│   ├── SKILL.md
+│   └── commands.md             # 完整命令参考
+├── qiaomu-opencli-browser/     # 浏览器自动化
+│   └── SKILL.md
+├── qiaomu-opencli-explorer/    # 适配器创建
+│   └── SKILL.md
+├── qiaomu-opencli-oneshot/     # 快速生成
+│   └── SKILL.md
+├── qiaomu-opencli-autofix/     # 自动修复
+│   └── SKILL.md
+└── qiaomu-smart-search/        # 智能搜索
+    ├── SKILL.md
+    └── references/             # 数据源配置
+```
 
-### 常见问题
+## 🔧 认证体系
 
-| 问题 | 解决方法 |
-|------|----------|
-| `opencli: command not found` | 重新运行 `npm install -g @jackwener/opencli`，检查 PATH 配置 |
-| Chrome 无法被控制 | 确保 Chrome 已打开，且 Playwright MCP Bridge 扩展已启用 |
-| 登录态未识别 | 在 Chrome 中手动登录目标网站后再试 |
-| 提示找不到 Playwright MCP | 重新执行第三步的配置命令 |
-| `npx skills add` 报错 | 确认 Node.js v16+ 已安装 |
+OpenCLI 支持 5 级认证：
 
-### 致谢
+1. **public** - 公开 API，无需认证
+2. **cookie** - 复用浏览器 Cookie（最常用）
+3. **header** - 需要 API Token
+4. **intercept** - 拦截请求获取 Token
+5. **ui** - 桌面应用 CDP 控制
 
-本 Skill 基于 **[jackwener/opencli](https://github.com/jackwener/opencli)** 构建。
+## 📚 支持的网站（部分）
 
-感谢原作者 **[@jakevin7（卡比卡比）](https://github.com/jackwener)** 开发了这个极具创意的工具——把主流网站变成 CLI 接口，让 AI 可以直接复用用户的浏览器登录态，是个非常聪明的设计。
+### 社交媒体
+Twitter/X, Reddit, 小红书, 知乎, 微博, Instagram, Facebook, Bluesky
 
----
+### 视频平台
+Bilibili, YouTube, TikTok, 抖音
 
-## License
+### 技术社区
+HackerNews, V2EX, Linux.do, Stack Overflow, GitHub
 
-MIT
+### AI 工具
+Grok, Doubao, ChatGPT, Gemini, Cursor, Codex, NotebookLM
 
----
+### 金融
+雪球, Yahoo Finance, Barchart, 新浪财经, Bloomberg
 
-## 📱 Follow the Author / 关注作者
+### 其他
+Google, Wikipedia, arXiv, Medium, Substack, BOSS直聘, LinkedIn
 
-If this skill helps you, follow me for more AI tools and tips.
+## 🤝 贡献
 
-如果这个 Skill 对你有帮助，欢迎关注我获取更多 AI 工具分享：
+本项目基于 [jackwener/opencli](https://github.com/jackwener/opencli)，主要贡献应提交到上游仓库。
+
+本仓库专注于：
+- 为 Claude Code 优化 Skills 文档
+- 添加中文使用示例
+- 维护 qiaomu 前缀的 Skills 版本
+
+## 📄 许可证
+
+MIT License - 详见 [LICENSE](./LICENSE)
+
+## 📱 关注作者
+
+如果这个项目对你有帮助，欢迎关注我获取更多技术分享：
 
 - **X (Twitter)**: [@vista8](https://x.com/vista8)
-- **微信公众号「向阳乔木推荐看」**:
+- **微信公众号「向阳乔木推荐看」**
 
-<p align="center">
-  <img src="https://github.com/joeseesun/terminal-boost/raw/main/assets/wechat-qr.jpg?raw=true" alt="向阳乔木推荐看公众号二维码" width="300">
-</p>
+## 🔗 相关链接
+
+- [上游项目](https://github.com/jackwener/opencli)
+- [OpenCLI 文档](https://github.com/jackwener/opencli#readme)
+- [Claude Code Skills](https://github.com/anthropics/claude-code)
